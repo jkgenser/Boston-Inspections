@@ -5,9 +5,13 @@ library('lubridate')
 library('leaflet')
 library('stringr')
 library('shiny')
+
 options(stringsAsFactors = FALSE)
 
-df = read.csv("food_inspections.csv")
+#df = read.csv("food_inspections.csv")
+
+df$Comments = toupper(df$Comments)
+
 
 shinyServer(function(input, output) {
 <<<<<<< HEAD
@@ -30,15 +34,15 @@ observe({
   
   colorData <- df[[colorBy]]
   if (colorBy == "LICSTATUS"){
-    pal <- colorBin("Set1", colorData)} else{}
-  pal <- colorFactor("Set1",colorData)
+    pal <- colorBin("Set1", colorData)} else{
+  pal <- colorFactor("Set1",colorData)}
   
   radius <- df[[sizeBy]] * 2
   
   
   leafletProxy("map",data = df)%>%
     clearMarkers() %>%
-    addCircleMarkers(data = df[df$Comments %in% "droppings"], radius=radius, group = "Circle",
+    addCircleMarkers(data = df[df$Comments %in% "droppings",], radius=radius, group = "Circle",
                      stroke=FALSE, fillOpacity=0.8, fillColor="red", 
                      popup = as.character(df$BusinessName))
   

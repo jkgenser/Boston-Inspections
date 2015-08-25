@@ -1,10 +1,18 @@
 ##choices for menu
+
+##choice for whether status is active or inactive
 vars <- c(
-  'Active' = 'LICSTATUS'
+  'Active' = 'Active',
+  'Deleted' = 'Deleted',
+  'Inactive' = 'Inactive'
 )
 
+##choice for which violations to see
 vars2 <- c(
-  'Frequency' = 'freq'
+  'Rodents, Insects, Animals' = "Insects  Rodents  Animals",
+  'Handwashing' = "Adequate Handwashing/Where/When/How",
+  'Hygeine' = "Good Hygienic Practices",
+  'Sewage and Wastewater' = 'Sewage and Waste Water'
 )
 
 
