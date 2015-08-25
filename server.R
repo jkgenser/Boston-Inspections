@@ -9,8 +9,8 @@ options(stringsAsFactors = FALSE)
 
 df = read.csv("food_inspections.csv")
 
-
 shinyServer(function(input, output) {
+  
 ##create the map
 output$map <- renderLeaflet({
   leaflet() %>%
@@ -32,14 +32,14 @@ observe({
     pal <- colorBin("Set1", colorData)} else{}
   pal <- colorFactor("Set1",colorData)
   
-  
   radius <- df[[sizeBy]] * 2
   
   
   leafletProxy("map",data = df)%>%
     clearMarkers() %>%
-    addCircleMarkers(data = df, radius=radius, group = "Circle",
-                     stroke=FALSE, fillOpacity=0.8, fillColor="red", popup = as.character(df$BusinessName))
+    addCircleMarkers(data = df[df$Comments %in% "droppings"], radius=radius, group = "Circle",
+                     stroke=FALSE, fillOpacity=0.8, fillColor="red", 
+                     popup = as.character(df$BusinessName))
   
 })
 
