@@ -32,7 +32,15 @@ shinyUI(fluidPage(
                                      min = 2006,
                                      max = 2015,
                                      value = c(2014,2015),
-                                     sep="")
-           )
+                                     sep=""),
+                         selectInput("size", "Size", vars2, selected="freq")
+           )),
+           
+  tabPanel("Bar graph",
+           br(),
+           div(
+             p("test"),
+             p("test2")
+            )
   )
 ))
