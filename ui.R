@@ -26,6 +26,13 @@ shinyUI(fluidPage(
                          checkboxInput("cluster", "Add Cluster"),
                          selectInput("color", "Color", vars),
                          selectInput("size", "Size", vars2, selected="freq")
-           )
+           ),
+           
+  tabPanel("Bar graph",
+           br(),
+           div(
+             p("test"),
+             p("test2")
+            )
   )
 ))
