@@ -16,6 +16,8 @@ vars2 <- c(
 )
 
 
+
+
 shinyUI(fluidPage(
   tabPanel("Interactive map",
            leafletOutput("map", width=1080, height = 720),
@@ -25,7 +27,12 @@ shinyUI(fluidPage(
                          width=220, height='auto',
                          checkboxInput("cluster", "Add Cluster"),
                          selectInput("color", "Color", vars),
-                         selectInput("size", "Size", vars2, selected="freq")
+                         selectInput("size", "Size", vars2, selected="freq"),
+                         sliderInput('period', h4("Select Time Period"),
+                                     min = 2006,
+                                     max = 2015,
+                                     value = c(2014,2015),
+                                     sep="")
            )
   )
 ))
