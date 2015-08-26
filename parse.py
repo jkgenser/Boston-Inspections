@@ -1,6 +1,5 @@
 import os, pandas as pd
 
-os.chdir("C:/Users/apetralia/Documents/CRA Do Not Backup/Personal/Miscellaenous/_Ideas/Food inspections")
 df = pd.read_csv("Food_Establishment_Inspections.csv")
 
 # Of all violation status, how many are each type?
