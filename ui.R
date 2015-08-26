@@ -1,46 +1,52 @@
 ##choices for menu
 
+library('plyr')
+library('lubridate')
+library('leaflet')
+library('stringr')
+library('shiny')
+library('data.table')
+library('leaflet')
+
 ##choice for whether status is active or inactive
-vars <- c(
+bstatus <- c(
   'Active' = 'Active',
   'Deleted' = 'Deleted',
   'Inactive' = 'Inactive'
 )
 
 ##choice for which violations to see
-vars2 <- c(
+violationType <- c(
   'Rodents, Insects, Animals' = "Insects  Rodents  Animals",
   'Handwashing' = "Adequate Handwashing/Where/When/How",
   'Hygeine' = "Good Hygienic Practices",
   'Sewage and Wastewater' = 'Sewage and Waste Water'
 )
 
-
-
-
-shinyUI(fluidPage(
+shinyUI(navbarPage("Boston Food Inspections", id="nav",
   tabPanel("Interactive map",
-           leafletOutput("map", width=1080, height = 720),
+           div(class="outer",
+               
+               tags$head(
+               includeCSS("styles.css")
+               ),
+           leafletOutput("map", width="100%", height = "100%"),
            
-           absolutePanel(id = "controls", class ="panel panel-default", fixed=TRUE,
+           absolutePanel(id ="controls", class ="panel panel-default", fixed=TRUE,
                          draggable=TRUE, top=60, left='auto', right=20, bottom='auto',
-                         width=220, height='auto',
-                         checkboxInput("cluster", "Add Cluster"),
-                         selectInput("color", "Color", vars),
-                         selectInput("size", "Size", vars2, selected="freq"),
+                         width=300, height='auto',
+                         checkboxGroupInput("status", "Business License Status", bstatus,
+                                            selected = "Active"),
+                         checkboxGroupInput("violations", "Violation", violationType, 
+                                            selected="Insects  Rodents  Animals"),
                          sliderInput('period', h4("Select Time Period"),
                                      min = 2006,
                                      max = 2015,
                                      value = c(2014,2015),
-                                     sep=""),
-                         selectInput("size", "Size", vars2, selected="freq")
-           )),
-           
-  tabPanel("Bar graph",
-           br(),
-           div(
-             p("test"),
-             p("test2")
-            )
+                                     sep="", step=1, ticks=F,animate=T, round=T)
+          
+                        )
+           )
   )
+  
 ))
