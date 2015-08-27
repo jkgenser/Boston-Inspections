@@ -17,6 +17,22 @@ bstatus <- c(
 
 ##choice for which violations to see
 violationType <- c(
+  'Handwashing' = "Adequate Handwashing/Where/When/How",
+  'Warm Storage' = 'Cold Holding',
+  'Not Thoroughly Cooked' = 'Cooking Temperatures',
+  'Dishwashing Facilities' = 'Dishwashng Facilities',
+  'Hot Holding' = 'Hot Holding',
+  'Location  Accessible' = 'Location  Accessible',
+  'Pesticide Usage' = 'Pesticide Usage',
+  'PHF\'s Properly Thawed' = 'PHF\'s Properly Thawed',
+  'Bare Hand Contact' = 'Prevention of Contamination from Hands',
+  'Inadequate Reheating Temperature' = 'Reheating',
+  'Raw foods stored near cooked foods' = 'Separation  Segregation Cross Contamination',
+  'Separation/Sanitizer Criteria' = 'Separation/Sanitizer Criteria',
+  'Spoilage Unsafe Food' = 'Spoilage Unsafe Food',
+  'Toilet Enclosed Clean' = 'Toilet Enclosed Clean',
+  'Washing fruits and veg\'s.' = 'Washing fruits and veg\'s.',
+  'Food Contact Surfaces Clean' = 'Food Contact Surfaces Clean',
   'Rodents, Insects, Animals' = "Insects  Rodents  Animals",
   'Handwashing' = "Adequate Handwashing/Where/When/How",
   'Hygeine' = "Good Hygienic Practices",
