@@ -11,7 +11,6 @@ library('leaflet')
 ##choice for whether status is active or inactive
 bstatus <- c(
   'Active' = 'Active',
-  'Deleted' = 'Deleted',
   'Inactive' = 'Inactive'
 )
 
@@ -63,6 +62,23 @@ shinyUI(navbarPage("Boston Food Inspections", id="nav",
           
                         )
            )
-  )
+  ),
+  tabPanel("Free text search",
+           sidebarLayout(
+             sidebarPanel(width = 3, 
+                          textInput("search", h4("Type your keywords here"), "dropping"),
+                          code("returns random 100 rows"),
+                          br(),
+                          br(),
+                          checkboxGroupInput("status2", h4("Business License Status"), bstatus,
+                                             selected = "Active"),
+                          checkboxGroupInput("violations2", h4("Violation"), violationType, 
+                                             selected="Insects  Rodents  Animals")
+             ),
+             mainPanel(
+               uiOutput("ui")
+               # tableOutput("table")
+             )
+           ))
   
 ))
