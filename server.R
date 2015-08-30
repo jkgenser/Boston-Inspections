@@ -69,7 +69,7 @@ shinyServer(function(input, output) {
         urlTemplate = "//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",
         attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>'
       ) %>%
-      setView(lng = -71.083, lat=42.353, zoom=13)
+      setView(lng = -71.076460, lat=42.334215, zoom=13.1)
     
   })
   getData <-reactive({

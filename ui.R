@@ -40,7 +40,7 @@ shinyUI(navbarPage(img(src = 'title.png', style='padding-bottom: 10px'), id="nav
                                      value = c(2008,2008),
                                      sep="", step=1, ticks=FALSE,animate=animationOptions(interval=2000, loop=T), round=TRUE),
                          tags$script("$(document).ready(function(){
-                                      setTimeout(function() {$('.slider-animate-button').click()},12000);
+                                      setTimeout(function() {$('.slider-animate-button').click()},16000);
                                      });")
                         )
            )
