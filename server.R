@@ -1,23 +1,31 @@
 #setwd("H:/USER/JGenser/Rats")
 
-#library('plyr')
 library('lubridate')
 library('leaflet')
 library('stringr')
 library('shiny')
-#library('data.table')
 library('leaflet')
 library('RColorBrewer')
 library('dplyr')
 
+##import data
 options(stringsAsFactors = FALSE)
-
 df = read.csv("MASTER_food_inspections.csv")
+
+##list of violation types that will appear on the map
+violationType <- c(
+  'Unhygienic' = "Unhygienic",
+  'Unsafe food preparation' = 'Unsafe food preparation',
+  'Unlicensed pesticide use' ='Unlicensed pesticide use',
+  'Rodents' = 'Rodents',
+  'Cockroaches' = 'Cockroaches'
+)
 
 
 ###############
 #  CLEANING   #
 ###############
+
 
 #make comments uppercase
 df$Comments = toupper(df$Comments)
@@ -25,17 +33,21 @@ df$Comments = toupper(df$Comments)
 df$RESULTDTTM = as.POSIXct(df$RESULTDTTM, format="%m/%d/%Y", tz='UTC')
 #create year variable
 df$year = as.numeric(year(df$RESULTDTTM))
+#drop records before 2008
+df = df[df$year>2007,]
 #create business id
 df$busID <- as.numeric(as.factor(paste(df$BusinessName, df$Latitude, df$Longitude)))
 #gen freq variable
 df$freq = 1
-
+#grep comments field to slightly modify the ViolDesc variable
+df[grep('dropping', df$Comments, ignore.case=TRUE),]$ViolDesc  <- 'Rodents'
+df[grep('cockroach', df$Comments, ignore.case=TRUE),]$ViolDesc <- 'Cockroaches'
 ###############
 #  FUNCTIONS  #
 ###############
 
 ##function to truncate the dataset
-subsetFunc <- function(df, status, violations, timeframe){
+subsetFunc <- function(df, status, violations, timeframe, search){
   ##period is a string of length representing the time-frame
   df <- filter(df, year >= timeframe[1], year <= timeframe[2])
   df <- df[df$LICSTATUS %in% status & df$ViolDesc %in% violations,]
@@ -43,20 +55,8 @@ subsetFunc <- function(df, status, violations, timeframe){
   return(set)
 }
 
-##create color palette
-numColors <- length(levels(as.factor(df$ViolDesc)))
-pal <- colorFactor("Set1", df$ViolDesc)
-
- 
-###########
-#   DEV   #
-###########
-# 
-
-
-###########
-#   DEV   #
-###########
+##create color palette only for violation types that will appear on the map
+pal <- colorFactor("Spectral", df$ViolDesc[df$ViolDesc %in% violationType])
 
 
 shinyServer(function(input, output) {
@@ -73,7 +73,7 @@ shinyServer(function(input, output) {
     
   })
   getData <-reactive({
-    subsetFunc(df,input$status, input$violations, input$period)
+    subsetFunc(df,input$status, input$violations, input$period, input$search)
   })
   
   getDesc <-reactive({
@@ -86,7 +86,6 @@ shinyServer(function(input, output) {
     ##subset the data
     data <- getData()
  
-
     ##size by the frequency
     radius = data$freq *20
     radius2 = data$freq*4
@@ -99,33 +98,34 @@ shinyServer(function(input, output) {
       leafletProxy("map", data = data) %>%
         clearShapes() %>%
         clearMarkers() %>%
-        addCircles(data = data, radius=radius, stroke=F, fillOpacity=0.3, 
+        addCircles(data = data, radius=radius, stroke=F, fillOpacity=0.7, 
                          fillColor=pal(data$ViolDesc)) %>%
         addLegend("bottomleft", pal=pal, values=data$ViolDesc, title="Violation Type",
                   layerId="colorLegend")
     }
   })
   
-  
-  search <- reactive({
-    df <- df[df$LICSTATUS %in% input$status2 & df$ViolDesc %in% input$violations2, ]    
-    subset <- df[grep(input$search, df$Comments, ignore.case=TRUE), ]$Comments %>% as.data.frame
-    t <- subset[sample(nrow(subset), 100, replace=TRUE), ] %>% as.data.frame
-    t <- sapply(t, tolower)
-    if(nrow(t)>0) {return(t)}
-  })
-  
-  output$table <- renderTable({
-    return(search())
-  }, 
-  include.rownames = FALSE,
-  include.colnames = FALSE)
-  
-  output$ui <- renderUI({
-    if (nrow(search()) == 0) {
-      return(em("No data to show")) }
+    search <- reactive({
+      df <- df[df$LICSTATUS %in% input$status2 & df$ViolDesc %in% input$violations2, ]    
+      subset <- df[grep(input$search, df$Comments, ignore.case=TRUE), ]$Comments %>% as.data.frame
+      if(nrow(subset) > 100) {
+        subset <- subset[sample(nrow(subset), 100, replace=FALSE), ] %>% as.data.frame}
+      if (nrow(subset) > 0) {
+        subset <- sapply(subset, tolower) }
+      return(subset)
+    })
     
-    tableOutput("table")
-  })
+    output$table <- renderTable({
+      return(search())
+    }, 
+    include.rownames = FALSE,
+    include.colnames = FALSE)
+    
+    output$ui <- renderUI({
+      if (nrow(search()) == 0)
+        return(em("No data to show"))
+      
+      tableOutput("table")
+    })
 
 })

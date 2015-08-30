@@ -1,12 +1,6 @@
+library(shiny)
+library(leaflet)
 ##choices for menu
-
-library('plyr')
-library('lubridate')
-library('leaflet')
-library('stringr')
-library('shiny')
-library('data.table')
-library('leaflet')
 
 ##choice for whether status is active or inactive
 bstatus <- c(
@@ -16,27 +10,13 @@ bstatus <- c(
 
 ##choice for which violations to see
 violationType <- c(
-  'Handwashing' = "Adequate Handwashing/Where/When/How",
-  'Warm Storage' = 'Cold Holding',
-  'Not Thoroughly Cooked' = 'Cooking Temperatures',
-  'Dishwashing Facilities' = 'Dishwashng Facilities',
-  'Hot Holding' = 'Hot Holding',
-  'Location  Accessible' = 'Location  Accessible',
-  'Pesticide Usage' = 'Pesticide Usage',
-  'PHF\'s Properly Thawed' = 'PHF\'s Properly Thawed',
-  'Bare Hand Contact' = 'Prevention of Contamination from Hands',
-  'Inadequate Reheating Temperature' = 'Reheating',
-  'Raw foods stored near cooked foods' = 'Separation  Segregation Cross Contamination',
-  'Separation/Sanitizer Criteria' = 'Separation/Sanitizer Criteria',
-  'Spoilage Unsafe Food' = 'Spoilage Unsafe Food',
-  'Toilet Enclosed Clean' = 'Toilet Enclosed Clean',
-  'Washing fruits and veg\'s.' = 'Washing fruits and veg\'s.',
-  'Food Contact Surfaces Clean' = 'Food Contact Surfaces Clean',
-  'Rodents, Insects, Animals' = "Insects  Rodents  Animals",
-  'Handwashing' = "Adequate Handwashing/Where/When/How",
-  'Hygeine' = "Good Hygienic Practices",
-  'Sewage and Wastewater' = 'Sewage and Waste Water'
+  'Cockroaches' = 'Cockroaches',
+  'Rodents' = 'Rodents',
+  'Unhygienic' = "Unhygienic",
+  'Unsafe food preparation' = 'Unsafe food preparation',
+  'Unlicensed pesticide use' ='Unlicensed pesticide use'
 )
+
 
 shinyUI(navbarPage("Boston Food Inspections", id="nav",
   tabPanel("Interactive map",
@@ -50,16 +30,15 @@ shinyUI(navbarPage("Boston Food Inspections", id="nav",
            absolutePanel(id ="controls", class ="panel panel-default", fixed=TRUE,
                          draggable=TRUE, top=60, left='auto', right=20, bottom='auto',
                          width=300, height='auto',
-                         checkboxGroupInput("status", "Business License Status", bstatus,
+                         checkboxGroupInput("status", h4("Business License Status"), bstatus,
                                             selected = "Active"),
-                         checkboxGroupInput("violations", "Violation", violationType, 
-                                            selected="Insects  Rodents  Animals"),
+                         checkboxGroupInput("violations", h4("Violation"), violationType, 
+                                            selected="Rodents"),
                          sliderInput('period', h4("Select Time Period"),
-                                     min = 2006,
+                                     min = 2008,
                                      max = 2015,
-                                     value = c(2014,2015),
-                                     sep="", step=1, ticks=F,animate=T, round=T)
-          
+                                     value = c(2008,2008),
+                                     sep="", step=1, ticks=FALSE,animate=animationOptions(loop=T)), round=TRUE
                         )
            )
   ),
@@ -73,12 +52,30 @@ shinyUI(navbarPage("Boston Food Inspections", id="nav",
                           checkboxGroupInput("status2", h4("Business License Status"), bstatus,
                                              selected = "Active"),
                           checkboxGroupInput("violations2", h4("Violation"), violationType, 
-                                             selected="Insects  Rodents  Animals")
+                                             selected='Rodents')
              ),
              mainPanel(
                uiOutput("ui")
-               # tableOutput("table")
              )
-           ))
+           )),
+  tabPanel("Discussion",
+           img(src = 'comment.png', style='margin-left: 10px'),
+           div(style = 'margin-left: 350px; margin-top:-260px',
+               includeCSS("styles.css"),
+               h4("Motivation"),
+               p("This project was created to geographically visualize where food inspection violations are concentrated in the city of Boston. With a more thorough understanding of where these are, local governments can focus their limited resources on communities that need them the most."),
+               p("We deliberately removed all business-identifying information. Our goal here is not to target individual restaurants, but rather to channel resources to areas that require more attention."),
+               h4("Methodology"),
+               p("We first downloaded food inspection data from Boston's online data repository. We then removed all \'Passed\' records in the", em("ViolStatus"), "column from the dataset, as well as the (very few) \'Deleted\' from the", em("LICSTATUS"), "column."),
+               p("We used the given latitude and longitudes to build the map. However, many of these were not given although a complete address was. To overcome this, we passed the addresses without coordinates through Google\'s", strong("Geocoding API"), "to resolve the coordinates. For the few records that had neither addresses nor coordinates, we dropped."),
+               p("We filtered the dataset for only notable violation types - for example, many were signage or labeling violations and they crowded the results."),
+               h4("Sources"),
+               p("All data was downloaded from", a("the city of Boston's public data repository.", href="https://data.cityofboston.gov/Health/Food-Establishment-Inspections/qndu-wx8w")),
+               h4("Authors"),
+               p(a("Jerry Genser", href="http://www.jerrygenser.com")),
+               p(a("Alex Petralia", href="http://www.alexpetralia.com")),
+               br()
+           )
+  )
   
 ))
