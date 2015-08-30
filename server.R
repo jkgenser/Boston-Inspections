@@ -13,12 +13,12 @@ options(stringsAsFactors = FALSE)
 df = read.csv("MASTER_food_inspections.csv")
 
 ##list of violation types that will appear on the map
-violationType <- c(
-  'Unhygienic' = "Unhygienic",
-  'Unsafe food preparation' = 'Unsafe food preparation',
-  'Unlicensed pesticide use' ='Unlicensed pesticide use',
-  'Rodents' = 'Rodents',
-  'Cockroaches' = 'Cockroaches'
+violationList <- c(
+  'Unhygienic',
+  'Unsafe food preparation',
+  'Unlicensed pesticide use',
+  'Rodents',
+  'Cockroaches'
 )
 
 
@@ -56,7 +56,7 @@ subsetFunc <- function(df, status, violations, timeframe, search){
 }
 
 ##create color palette only for violation types that will appear on the map
-pal <- colorFactor("Spectral", df$ViolDesc[df$ViolDesc %in% violationType])
+pal <- colorFactor("Spectral", df$ViolDesc[df$ViolDesc %in% violationList])
 
 
 shinyServer(function(input, output) {
@@ -85,7 +85,8 @@ shinyServer(function(input, output) {
   observe({
     ##subset the data
     data <- getData()
- 
+    
+    
     ##size by the frequency
     radius = data$freq *20
     radius2 = data$freq*4

@@ -18,7 +18,7 @@ violationType <- c(
 )
 
 
-shinyUI(navbarPage("Boston Food Inspections", id="nav",
+shinyUI(navbarPage(img(src = 'title.png', style='margin-bottom: 20px'), id="nav",
   tabPanel("Interactive map",
            div(class="outer",
                
@@ -38,21 +38,24 @@ shinyUI(navbarPage("Boston Food Inspections", id="nav",
                                      min = 2008,
                                      max = 2015,
                                      value = c(2008,2008),
-                                     sep="", step=1, ticks=FALSE,animate=animationOptions(loop=T)), round=TRUE
+                                     sep="", step=1, ticks=FALSE,animate=animationOptions(loop=T), round=TRUE),
+                         tags$script("$(document).ready(function(){
+                                      setTimeout(function() {$('.slider-animate-button').click()},15000);
+                                     });")
                         )
            )
   ),
   tabPanel("Free text search",
            sidebarLayout(
              sidebarPanel(width = 3, 
-                          textInput("search", h4("Type your keywords here"), "dropping"),
+                          textInput("search", h4("Type your keywords here"), "cockroach"),
                           code("returns random 100 rows"),
                           br(),
                           br(),
                           checkboxGroupInput("status2", h4("Business License Status"), bstatus,
                                              selected = "Active"),
                           checkboxGroupInput("violations2", h4("Violation"), violationType, 
-                                             selected='Rodents')
+                                             selected=violationType)
              ),
              mainPanel(
                uiOutput("ui")
