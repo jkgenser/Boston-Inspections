@@ -1,4 +1,4 @@
-#setwd("H:/USER/JGenser/Rats")
+setwd("H:/USER/JGenser/Rats")
 
 library('lubridate')
 library('leaflet')
@@ -10,7 +10,8 @@ library('dplyr')
 
 ##import data
 options(stringsAsFactors = FALSE)
-df = read.csv("MASTER_food_inspections.csv")
+#df = read.csv("MASTER_food_inspections.csv")
+load("H:/USER/JGenser/Rats/TempData.RData")
 
 ##list of violation types that will appear on the map
 violationList <- c(
@@ -56,7 +57,7 @@ subsetFunc <- function(df, status, violations, timeframe, search){
 }
 
 ##create color palette only for violation types that will appear on the map
-pal <- colorFactor("Spectral", df$ViolDesc[df$ViolDesc %in% violationList])
+pal <- colorFactor("Set1", df$ViolDesc[df$ViolDesc %in% violationList])
 
 
 shinyServer(function(input, output) {
@@ -66,10 +67,11 @@ shinyServer(function(input, output) {
   output$map <- renderLeaflet({
     leaflet() %>%
       addTiles(
-        urlTemplate = "//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",
+        # urlTemplate = "//{s}.tiles.mapbox.com/v3/jcheng.map-5ebohr46/{z}/{x}/{y}.png",
+        urlTemplate = "//{s}.tiles.mapbox.com/v4/mapbox.streets-basic/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYWxleHBldHJhbGlhIiwiYSI6IjkzNGM2N2ExZmE2ZDEwMzFiMzQyMDYxOWZmM2Q3OWIzIn0.lnNa29TGpWFu5V-pqDIsuA",
         attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>'
       ) %>%
-      setView(lng = -71.076460, lat=42.334215, zoom=13.1)
+      setView(lng = -71.083, lat=42.353, zoom=13)
     
   })
   getData <-reactive({
@@ -99,7 +101,7 @@ shinyServer(function(input, output) {
       leafletProxy("map", data = data) %>%
         clearShapes() %>%
         clearMarkers() %>%
-        addCircles(data = data, radius=radius, stroke=F, fillOpacity=0.7, 
+        addCircles(data = data, radius=radius, stroke=F, fillOpacity=0.6, 
                          fillColor=pal(data$ViolDesc)) %>%
         addLegend("bottomleft", pal=pal, values=data$ViolDesc, title="Violation Type",
                   layerId="colorLegend")
