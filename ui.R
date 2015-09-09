@@ -84,8 +84,8 @@ shinyUI(navbarPage('Boston Food Inspections', id="nav",
                p("All data was downloaded from", a("the city of Boston's public data repository.", href="https://data.cityofboston.gov/Health/Food-Establishment-Inspections/qndu-wx8w")),
                br(),
                h4("Authors"),
-               p(a("Jerry Genser", href="http://www.jerrygenser.com")),
-               p(a("Alex Petralia", href="http://www.alexpetralia.com")),
+               p("Jerry Genser"),
+               p("Alex Petralia"),
                br()
            )
   )
