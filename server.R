@@ -71,7 +71,7 @@ shinyServer(function(input, output) {
         urlTemplate = "//{s}.tiles.mapbox.com/v4/mapbox.streets-basic/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYWxleHBldHJhbGlhIiwiYSI6IjkzNGM2N2ExZmE2ZDEwMzFiMzQyMDYxOWZmM2Q3OWIzIn0.lnNa29TGpWFu5V-pqDIsuA",
         attribution = 'Maps by <a href="http://www.mapbox.com/">Mapbox</a>'
       ) %>%
-      setView(lng = -71.076460, lat=42.334215, zoom=13.1)
+      setView(lng = -71.0858, lat=42.3413, zoom=13.0)
     
   })
   getData <-reactive({
