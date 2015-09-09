@@ -1,5 +1,3 @@
-setwd("H:/USER/JGenser/Rats")
-
 library('lubridate')
 library('leaflet')
 library('stringr')
@@ -10,8 +8,7 @@ library('dplyr')
 
 ##import data
 options(stringsAsFactors = FALSE)
-#df = read.csv("MASTER_food_inspections.csv")
-load("H:/USER/JGenser/Rats/TempData.RData")
+df = read.csv("MASTER_food_inspections.csv")
 
 ##list of violation types that will appear on the map
 violationList <- c(
